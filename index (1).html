@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Apuntes de Tecnología</title>
+<style>
+  :root { color-scheme: light; --ink: #202534; --accent: #4f46e5; --paper: #fff; --bg: #f2f4f8; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font-family: system-ui, -apple-system, "Segoe UI", sans-serif; line-height: 1.6; }
+  header { background: linear-gradient(135deg, #312e81, #6366f1); color: white; padding: 2.5rem 1.25rem; text-align: center; }
+  header h1 { margin: 0 0 .4rem; font-size: clamp(1.8rem, 4vw, 2.7rem); }
+  header p { margin: 0; opacity: .9; }
+  main { width: min(950px, calc(100% - 2rem)); margin: 2rem auto; }
+  .toolbar { display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap; margin-bottom: 1rem; }
+  .toolbar input { flex: 1; min-width: 220px; padding: .8rem 1rem; border: 1px solid #d5d9e4; border-radius: 10px; font: inherit; }
+  .toolbar button { padding: .8rem 1rem; border: 0; border-radius: 10px; background: var(--accent); color: white; font: inherit; cursor: pointer; }
+  .page { background: var(--paper); border-radius: 14px; padding: clamp(1rem, 4vw, 2rem); margin: 1rem 0; box-shadow: 0 4px 18px #2025340d; overflow-wrap: anywhere; }
+  .page-number { color: var(--accent); font-size: .85rem; font-weight: 700; margin-bottom: .8rem; }
+  pre { white-space: pre-wrap; overflow-wrap: anywhere; font: inherit; margin: 0; }
+  .hidden { display: none; }
+  footer { text-align: center; padding: 2rem 1rem; color: #626a7b; font-size: .9rem; }
+  @media print { body { background: white; } header { background: white; color: black; padding: 1rem; } .toolbar { display: none; } main { width: 100%; margin: 0; } .page { box-shadow: none; border: 1px solid #ddd; break-inside: avoid; } }
+</style>
+</head>
+<body>
+<header>
+  <h1>Apuntes de Tecnología</h1>
+  <p>Contenido convertido desde el PDF original</p>
+</header>
+<main>
+  <div class="toolbar">
+    <input id="search" type="search" placeholder="Buscar en los apuntes..." aria-label="Buscar en los apuntes">
+    <button onclick="window.print()">Imprimir / Guardar como PDF</button>
+  </div>
+  <div id="pages">
+
+    <section class="page">
+      <div class="page-number">Página 1 de 17</div>
+      <pre> 
+TECNOLOGÍA 
+18/09/2026 
+El debugging (o depuración) es el proceso de buscar, encontrar y solucionar errores 
+(llamados &quot;bugs&quot;) en el código de un programa informático. 
+ 
+Cuando un programa no funciona como debería, no realiza los cálculos correctos o se 
+cierra inesperadamente, significa que hay un error en la lógica o en la sintaxis. El 
+debugging sirve para corregir esos problemas. 
+ 
+Pasos principales del debugging 
+• Reproducir el error: Identificar exactamente qué acciones del usuario o qué 
+datos provocan que el programa falle. 
+ 
+• Localizar el fallo: Examinar el código para encontrar la línea o la sección exacta 
+donde ocurre la falla. 
+ 
+• Analizar la causa: Entender por qué el código no se comporta de la manera 
+esperada. 
+ 
+• Corregir el código: Hacer las modificaciones necesarias para solucionar el 
+problema. 
+ 
+• Probar la solución: Verificar que el error se haya resuelto sin introducir nuevos 
+fallos en otras partes del programa. 
+ 
+Herramientas y técnicas comunes 
+• Puntos de interrupción (Breakpoints): Marcas que se colocan en el código 
+para pausar la ejecución del programa en una línea específica y revisar el estado 
+de las variables en ese momento. 
+ 
+• Ejecución paso a paso: Avanzar por el programa línea por línea para observar el 
+flujo de ejecución. 
+ 
+• Impresión de mensajes (Print debugging): Insertar instrucciones para mostrar 
+el valor de variables o mensajes en la consola a medida que se ejecuta el 
+código. </pre>
+    </section>
+    
+
+    <section class="page">
+      <div class="page-number">Página 2 de 17</div>
+      <pre> 
+• Herramientas de depuración (Debuggers): Programas integrados en los 
+entornos de desarrollo (IDE) que facilitan la inspección del estado de la 
+aplicación en tiempo real. 
+Este programa de Arduino hace variar progresivamente la intensidad de un LED 
+conectado al pin 9 (efecto de atenuación o fade). 
+ 
+1. Lenguaje Ensamblador (AVR para ATmega328P - Arduino Uno) 
+A nivel de hardware, el chip ATmega328P utiliza sus contadores/temporizadores 
+hardware (Timers) para generar las señales de modulación por ancho de pulsos (PWM). 
+En el pin 9 (asociado al registro OCR1A), la instrucción equivale a escribir los valores del 
+ciclo de trabajo directamente en ese registro: 
+ 
+Fragmento de código 
+.def brightness = r16 
+.def step = r17 
+ 
+setup: 
+    ; Configura el Pin 9 (PB1) como salida 
+    sbi   0x04, 1            ; DDRB |= (1 &lt;&lt; PB1) 
+ 
+    ; Configura Timer1 para PWM rápido de 8 bits 
+    ldi   r18, 0x81 
+    sts   0x80, r18          ; TCCR1A = Fast PWM 8-bit 
+    ldi   r18, 0x0B 
+    sts   0x81, r18          ; TCCR1B = Prescaler 64 
+ 
+loop: 
+    ; --- Bucle 1: Incrementar brillo --- 
+    clr   brightness         ; brightness = 0 
+    ldi   step, 5 
+ 
+fade_up: 
+    sts   0x88, brightness   ; Escribe en OCR1AL (analogWrite en pin 9) 
+    rcall delay_30ms         ; Espera 30 ms 
+    add   brightness, step   ; brightness += 5 
+    brcc  fade_up            ; Repite hasta sobrepasar 255 
+ 
+    ; --- Bucle 2: Decrementar brillo --- 
+    ldi   brightness, 255    ; brightness = 255 
+ 
+fade_down: 
+    sts   0x88, brightness   ; Escribe en OCR1AL 
+    rcall delay_30ms         ; Espera 30 ms 
+    sub   brightness, step   ; brightness -= 5 </pre>
+    </section>
+    
+
+    <section class="page">
+      <div class="page-number">Página 3 de 17</div>
+      <pre>    brcc  fade_down          ; Repite hasta llegar a 0 
+ 
+    rjmp  loop               ; Repite el bucle principal 
+ 
+2. Lenguaje Máquina (Hexadecimal y Binario) 
+Cada instrucción en ensamblador AVR de 8 bits se traduce a una o dos palabras de 16 
+bits en la memoria Flash del microcontrolador: 
+ 
+Instrucción 
+Ensamblador Hexadecimal Lenguaje Máquina (Binario) 
+sbi 0x04, 1 9A 21 1001 1010 0010 0001 
+clr brightness (clr 
+r16) 27 00 0010 0111 0000 0000 
+sts 0x88, r16 93 00 00 88 1001 0011 0000 0000 0000 0000 
+1000 1000 
+add r16, r17 0F 01 0000 1111 0000 0001 
+sub r16, r17 1B 01 0001 1011 0000 0001 
+rjmp loop CF FC 1100 1111 1111 1100 
+Concepto clave: ¿Cómo logra Arduino el brillo analógico? 
+Los pines con el símbolo ~ no entregan un voltaje variable real (como 2.5V), sino que 
+conmuta el pin entre 0V y 5V miles de veces por segundo. Modificando el registro OCR1A 
+(el parámetro brightness), cambias la proporción de tiempo que permanece 
+encendido frente a apagado (Pulse-Width Modulation). 
+ 
+21/09/2026 
+El lenguaje ensamblador es un lenguaje de programación de bajo nivel que sirve como 
+puente directo entre el código fuente y las instrucciones de máquina que ejecuta el 
+procesador. 
+A diferencia de los lenguajes de alto nivel (como Python, C# o Java), ensamblador se 
+corresponde casi de forma directa con la arquitectura física de la CPU. 
+Ejemplos: 
+El cargador de arranque (bootloader) de un sistema operativo. 
+ </pre>
+    </section>
+    
+
+    <section class="page">
+      <div class="page-number">Página 4 de 17</div>
+      <pre>La lectura directa de registros en controladores de dispositivos (drivers). 
+ 
+El control de tiempo real en microcontroladores para sistemas  
+El número binario 11110010 equivale al 242 en sistema decimal. 
+ 
+Procedimiento: 
+Se suma el valor de cada posición donde hay un 1: 
+128 + 64 + 32 + 16 + 0 + 0 + 2 + 0 = 242 
+25/09/2026 
+Practica sensor de humedad. 
+ 
+C++ 
+// C++ code 
+// 
+ 
+• Líneas 1 y 2: Comentarios iniciales del archivo. 
+ 
+C++ 
+int moisture = 0; 
+ 
+• Línea 3: Declara una variable entera global llamada moisture (humedad) e 
+inicializa su valor en 0. 
+ 
+C++ 
+void setup() 
+{ 
+ 
+• Líneas 5 y 6: Inicia la función setup(), que configura el hardware al encender la 
+placa. 
+ 
+C++ 
+ pinMode(A0, OUTPUT); 
+ 
+• Línea 7: Configura el pin analógico A0 como una salida digital (OUTPUT). Se usará 
+como fuente de alimentación para el sensor. 
+ 
+C++ </pre>
+    </section>
+    
+
+    <section class="page">
+      <div class="page-number">Página 5 de 17</div>
+      <pre> pinMode(A1, INPUT); 
+ 
+• Línea 8: Configura el pin analógico A1 como entrada (INPUT). Por aquí se leerá la 
+señal analógica devuelta por el sensor. 
+ 
+C++ 
+ Serial.begin(9600); 
+ 
+• Línea 9: Inicia la comunicación serie a 9600 baudios para enviar datos a la 
+computadora. 
+ 
+C++ 
+ pinMode(8, OUTPUT); 
+  pinMode(9, OUTPUT); 
+  pinMode(10, OUTPUT); 
+  pinMode(11, OUTPUT); 
+  pinMode(12, OUTPUT); 
+ 
+• Líneas 10 a 14: Configuran los pines digitales del 8 al 12 como salidas (OUTPUT). 
+Típicamente corresponden a un conjunto de LEDs (barra de nivel) para indicar 
+de forma visual cuán seco o húmedo está el terreno. 
+ 
+C++ 
+} 
+ 
+• Línea 15: Cierra la función setup(). 
+ 
+C++ 
+void loop() 
+{ 
+ 
+• Líneas 17 y 18: Inicia el bucle principal loop(). 
+ 
+C++ 
+ // Apply power to the soil moisture sensor 
+  digitalWrite(A0, HIGH); 
+ 
+• Líneas 19 y 20: Comentario y acción: Envía un voltaje alto (HIGH, 5V) al pin A0 
+para encender el sensor únicamente justo antes de medir. 
+ 
+C++ 
+ delay(10); // Wait for 10 millisecond(s) 
+ </pre>
+    </section>
+    
+
+    <section class="page">
+      <div class="page-number">Página 6 de 17</div>
+      <pre>• Línea 21: Hace una pequeña pausa de 10 milisegundos para permitir que la 
+corriente se estabilice en el sensor. 
+ 
+C++ 
+ moisture = analogRead(A1); 
+ 
+• Línea 22: Lee el valor analógico que entra por el pin A1 (entre 0 y 1023) y lo 
+almacena en la variable moisture. 
+ 
+C++ 
+ // Turn off the sensor to reduce metal corrosion 
+  // over time 
+  digitalWrite(A0, LOW); 
+ 
+• Líneas 23 a 25: Comentario explicativo y acción: Apaga el pin A0 (LOW). Apagar el 
+sensor entre lecturas previene la electrólisis y corrosión prematura de sus 
+electrodos de metal en la tierra. 
+ 
+C++ 
+ Serial.println(moisture); 
+ 
+• Línea 26: Imprime en el Monitor Serie la lectura de humedad obtenida. 
+ 
+C++ 
+ digitalWrite(8, LOW); 
+  digitalWrite(9, LOW); 
+  digitalWrite(10, LOW); 
+  digitalWrite(11, LOW); 
+  digitalWrite(12, LOW); 
+ 
+• Líneas 27 a 31: Apaga todos los pines de salida (del 8 al 12) para &quot;limpiar&quot; la 
+barra de LEDs antes de encender únicamente el correspondiente. 
+ 
+C++ 
+ if (moisture &lt; 200) { 
+    digitalWrite(12, HIGH); 
+  } else { 
+ 
+• Líneas 32 a 34: Evalúa si la humedad es menor a 200. Si lo es, enciende el LED 
+conectado al pin 12. Si no, pasa a la siguiente condición. 
+ 
+C++ 
+   if (moisture &lt; 400) { 
+      digitalWrite(11, HIGH); </pre>
+    </section>
+    
+
+    <section class="page">
+      <div class="page-number">Página 7 de 17</div>
+      <pre>    } else { 
+ 
+• Líneas 35 a 37: Si está entre 200 y 399, enciende el LED del pin 11. Si no, 
+continúa al siguiente bloque. 
+ 
+C++ 
+     if (moisture &lt; 600) { 
+        digitalWrite(10, HIGH); 
+      } else { 
+ 
+• Líneas 38 a 40: Si la lectura está entre 400 y 599, enciende el LED del pin 10. Si 
+no, sigue evaluando. 
+ 
+C++ 
+       if (moisture &lt; 800) { 
+          digitalWrite(9, HIGH); 
+        } else { 
+          digitalWrite(8, HIGH); 
+        } 
+ 
+• Líneas 41 a 45: Si está entre 600 y 799, enciende el pin 9. Para cualquier valor 
+igual o superior a 800 (el nivel más alto), enciende el pin 8. 
+ 
+C++ 
+     } 
+    } 
+  } 
+ 
+• Líneas 46 a 48: Cierran los bloques anidados de las estructuras condicionales 
+if/else. 
+ 
+C++ 
+ delay(100); // Wait for 100 millisecond(s) 
+ 
+• Línea 49: Pausa el programa durante 100 milisegundos antes de repetir la 
+medición. 
+ 
+C++ 
+} 
+ 
+• Línea 50: Cierra la función loop(). 
+ </pre>
+    </section>
+    
+
+    <section class="page">
+      <div class="page-number">Página 8 de 17</div>
+      <pre>Python code 
+Programa escrito en MakeCode Python para micro:bit: 
+ 
+Python 
+# Python code 
+# 
+ 
+• Líneas 1 y 2: Comentarios iniciales del archivo. 
+ 
+Python 
+moisture = 0 
+x = 0 
+y = 0 
+ 
+• Líneas 3 a 5: Declaran e inicializan en 0 las variables globales moisture 
+(humedad), x (coordenada horizontal del LED) e y (coordenada vertical del LED). 
+ 
+Python 
+def on_forever(): 
+ 
+• Línea 7: Define la función on_forever(), que contiene las instrucciones que se 
+ejecutarán continuamente en bucle. 
+ 
+Python 
+</pre>
+    </section>
+    
+
+    <section class="page">
+      <div class="page-number">Página 9 de 17</div>
+      <pre> global moisture 
+  global x 
+  global y 
+ 
+• Líneas 8 a 10: Indican que la función usará las variables globales declaradas al 
+inicio en lugar de crear variables locales nuevas. 
+ 
+Python 
+ pins.digital_write_pin(DigitalPin.P1, 1) 
+ 
+• Línea 11: Envía una señal alta (1 o 3.3V) a través del pin P1 para encender el 
+sensor de humedad. 
+ 
+Python 
+ basic.pause(10) 
+ 
+• Línea 12: Pausa el programa durante 10 milisegundos para permitir que la 
+lectura del sensor se estabilice. 
+ 
+Python 
+ moisture = Math.map(pins.analog_read_pin(AnalogPin.P2), 0, 813, 0, 100) 
+ 
+• Línea 13: Lee el valor analógico del sensor en el pin P2 y usa Math.map para 
+escalarlo: mapea el rango de entrada de 0 a 813 a un porcentaje equivalente de 
+0 a 100%, guardándolo en moisture. 
+ 
+Python 
+ pins.digital_write_pin(DigitalPin.P1, 0) 
+ 
+• Línea 14: Apaga la energía del pin P1 (0) para evitar la corrosión de las puntas del 
+sensor. 
+ 
+Python 
+ if moisture &lt; 50: 
+ 
+• Línea 15: Comprueba si el nivel de humedad mapeado es menor al 50% 
+(indicando que la tierra está seca). 
+ 
+Python 
+   x = randint(0, 4) 
+    y = 0 
+ </pre>
+    </section>
+    
+
+    <section class="page">
+      <div class="page-number">Página 10 de 17</div>
+      <pre>• Líneas 16 y 17: Si está seco, elige una columna aleatoria en la matriz de LEDs de 
+la micro:bit (de 0 a 4) y reinicia la posición vertical y en la parte superior (0). 
+ 
+Python 
+   for index in range(9): 
+ 
+• Línea 18: Inicia un bucle for que se repetirá 9 veces para animar una &quot;gota&quot; que 
+cae por la pantalla. 
+ 
+Python 
+     led.plot_brightness(x, y, 255) 
+      led.plot_brightness(x, (y - 1), 32) 
+      led.plot_brightness(x, (y - 2), 8) 
+      led.plot_brightness(x, (y - 3), 2) 
+      led.plot_brightness(x, (y - 4), 0) 
+ 
+• Líneas 19 a 23: Crean un efecto de estela o degradado luminoso sobre la 
+columna x: 
+ 
+o El LED en la posición principal y se enciende a su máximo brillo (255). 
+ 
+o Los LEDs superiores adyacentes se encienden con brillos 
+progresivamente menores (32, 8, 2) y el último se apaga (0) para simular 
+la cola de la gota. 
+ 
+Python 
+     y += 1 
+      basic.pause(50) 
+ 
+• Líneas 24 y 25: Desplazan la gota una fila hacia abajo (y += 1) y esperan 50 
+milisegundos para que el movimiento de la animación sea visible. 
+ 
+Python 
+ else: 
+    basic.pause(1000) 
+ 
+• Líneas 26 y 27: Si la humedad es mayor o igual al 50% (tierra suficientemente 
+húmeda), no anima la gota y simplemente espera 1 segundo (1000 ms) antes de 
+volver a medir. 
+ 
+Python 
+basic.forever(on_forever) 
+ </pre>
+    </section>
+    
+
+    <section class="page">
+      <div class="page-number">Página 11 de 17</div>
+      <pre>• Línea 28: Registra la función on_forever dentro del ciclo principal infinito de la 
+placa micro:bit. 
+ 
+28/09/2026 
+P15 
+ George Boole (1815–1864) fue un brillante matemático y filósofo británico inventó 
+el sistema de lógica matemática que hoy conocemos como álgebra de Boole. Su 
+trabajo es la base fundamental de toda la programación y la tecnología digital actual. 
+¿Por qué es tan importante? 
+• Unió la lógica y las matemáticas: Antes de Boole, la lógica era una rama de la 
+filosofía. Él demostró que el pensamiento lógico se podía expresar mediante 
+ecuaciones algebraicas. 
+• El lenguaje de las computadoras: Redujo toda la lógica a solo dos opciones: 1 
+(verdadero) y 0 (falso). Un siglo después, este sistema binario se convirtió en el 
+código que utilizan los microchips y las computadoras para procesar 
+información. 
+El tipo long de Python permite almacenar números de cualquier precisión, estando 
+limitados solo por la memoria disponible en la máquina. Al asignar un número a una 
+variable esta pasará a tener tipo int, a menos que el número sea tan grande como para 
+requerir el uso del tipo long. 
+2/10/2026 
+SISTEMAS DE NUMERACION PAG17 
+Manual de  postprocesiamiento de gcode en ultimaker cura 
+Guia tecnica y de   referencia para la modificacion    automatica   
+Subir archivo stl al cura 
+Y abrirlo en el bloc de notas  
+ </pre>
+    </section>
+    
+
+    <section class="page">
+      <div class="page-number">Página 12 de 17</div>
+      <pre>05/10/2026 
+Recordar lo que hicimos el ultimo dia 
+En el salon de actos vamos a programar en el lenguaje de las  aplicaciones 
+HTML 
+El esqueleto de la aplicacion Html 
+El color y forma CSS 
+Y el   Java es  para mejorarlo
+ 
+</pre>
+    </section>
+    
+
+    <section class="page">
+      <div class="page-number">Página 13 de 17</div>
+      <pre>9/10/2026 
+Html web  
+&lt;!-- Indica al navegador que este documento utiliza la versión HTML5 --&gt; &lt;!DOCTYPE 
+html&gt; &lt;!-- Inicio de la etiqueta raíz HTML, especificando el idioma español --&gt; &lt;html 
+lang=&quot;es&quot;&gt; &lt;!-- Encabezado del documento con metadatos, fuentes y estilos --&gt; 
+&lt;head&gt; &lt;!-- Define la codificación de caracteres UTF-8 para admitir tildes y caracteres 
+especiales --&gt; &lt;meta charset=&quot;UTF-8&quot;&gt; &lt;!-- Ajusta el tamaño de la pantalla en 
+dispositivos móviles para hacer la web responsive --&gt; &lt;meta name=&quot;viewport&quot; 
+content=&quot;width=device-width, initial-scale=1.0&quot;&gt; &lt;!-- Título que aparece en la pestaña 
+del navegador --&gt; &lt;title&gt;AURA - Boutique &amp; Moda Elegante&lt;/title&gt; &lt;!-- Optimización de 
+conexión previa a las fuentes de Google Fonts --&gt; &lt;link rel=&quot;preconnect&quot; 
+href=&quot;https://fonts.googleapis.com&quot;&gt; 
+5 primeras lineas comentadas. 
+Normas iso 
+Organizacion standarizacion internacional 
+Publicamos en repositorio de github 
+</pre>
+    </section>
+    
+
+    <section class="page">
+      <div class="page-number">Página 14 de 17</div>
+      <pre>Aquí tienes la explicación de cada una de las 5 líneas del código: 
+ 
+&lt;!DOCTYPE html&gt;&lt;html lang=&quot;es&quot;&gt;&lt;head&gt;&lt;meta charset=&quot;UTF-8&quot;&gt;&lt;title&gt;Tienda de 
+Ropa&lt;/title&gt;&lt;/head&gt; 
+ 
+Configura la estructura básica de la página web: indica que es un documento HTML5, 
+establece el idioma en español, habilita los caracteres especiales (como acentos y la 
+letra ñ) mediante UTF-8 y define el título &quot;Tienda de Ropa&quot; que aparece en la pestaña 
+del navegador. 
+ 
+&lt;body style=&quot;font-family:sans-serif; text-align:center; padding:50px;&quot;&gt; 
+ 
+Abre el cuerpo visible de la página y aplica estilos básicos directamente: cambia la 
+letra a una fuente limpia (sans-serif), centra todo el contenido en la pantalla (text-
+align:center) y añade un margen interno (padding:50px) para que el texto no quede 
+pegado a los bordes. 
+ 
+</pre>
+    </section>
+    
+
+    <section class="page">
+      <div class="page-number">Página 15 de 17</div>
+      <pre>&lt;h1&gt;MODA SIMPLE&lt;/h1&gt; 
+ 
+Muestra el título principal de la tienda en texto grande y destacado. 
+ 
+&lt;p&gt;Camiseta Básica - 15€ | Pantalón Denim - 30€ | Chaqueta - 45€&lt;/p&gt; 
+ 
+Crea un párrafo que lista los productos disponibles junto con sus respectivos precios 
+separados por barras. 
+ 
+&lt;button onclick=&quot;alert(&#x27;¡Gracias por tu compra!&#x27;)&quot;&gt;Comprar&lt;/button&gt;&lt;/body&gt;&lt;/html&gt; 
+ 
+Crea un botón con el texto &quot;Comprar&quot; que ejecuta una pequeña ventana flotante de 
+agradecimiento al hacer clic sobre él, y finalmente cierra las etiquetas principales del 
+cuerpo (&lt;/body&gt;) y del documento HTML (&lt;/html&gt;). 
+23/10/2026 
+Ejecutar en google collab 
+ 
+ 
+Hoja clase 
+. 
+</pre>
+    </section>
+    
+
+    <section class="page">
+      <div class="page-number">Página 16 de 17</div>
+      <pre>26/10/2026 
+Capítulo 2: Variables, Expresiones y Sentencias 
+• Tipos de datos básicos: Python maneja enteros (int, como 17), números de 
+punto flotante (float, con decimales como 3.2), y cadenas de texto (str, 
+encerradas entre comillas como &#x27;Hola&#x27;). 
+• Variables y asignación: Una variable es un nombre que se refiere a un valor (ej. 
+n = 17). Los nombres de las variables deben ser mnemónicos (descriptivos), 
+comenzar con letra o guion bajo, y nunca usar palabras reservadas de Python 
+(como class, if, etc.). 
+• Operadores: Símbolos para realizar cálculos (+, -, *, /, división entera //, 
+exponenciación ** y módulo %). El operador + también sirve para concatenar 
+(unir) cadenas de texto. 
+• Orden de operaciones: Se sigue la jerarquía matemática (PEMDAS): Paréntesis, 
+Exponentes, Multiplicación/División y Suma/Resta de izquierda a derecha. 
+• Entrada de datos: La función input() permite recibir datos del usuario en 
+forma de cadena. Para operar matemáticamente con ellos, se deben convertir 
+usando funciones como int() o float(). 
+• Comentarios: Se indican con # y son ignorados por Python; sirven para 
+documentar el código. 
+• # Programa de cálculo de salario...: Es un comentario. Python lo 
+ignora, pero ayuda a los humanos a entender el propósito del código. 
+• nombre = input(&#x27;¿Cómo te llamas?\n&#x27;): Utiliza la función input() para 
+pedir un valor por teclado. Lo que escribe el usuario se guarda en la variable 
+nombre como una cadena (str). El \n añade un salto de línea. 
+• horas_str = input(...): Solicita otro dato de texto al usuario y lo almacena 
+temporalmente en una variable de tipo str. 
+• horas = int(horas_str): Utiliza la función de conversión int() para 
+transformar la cadena de texto anterior en un número entero (int), permitiendo 
+realizar operaciones matemáticas con él. 
+• tarifa = float(tarifa_str): Convierte la entrada del usuario en un 
+número con decimales de tipo punto flotante (float). 
+• salario_bruto = horas * tarifa: Es una expresión que utiliza el operador 
+de multiplicación (*) entre dos variables numéricas, asignando el resultado a 
+salario_bruto. 
+• horas_pares = (horas % 2 == 0): Utiliza el operador módulo (%) para 
+obtener el resto de dividir las horas entre 2. Si el resto es 0, el resultado lógico 
+guardado será True (verdadero). </pre>
+    </section>
+    
+
+    <section class="page">
+      <div class="page-number">Página 17 de 17</div>
+      <pre>• print(&#x27;¡Hola,&#x27;, nombre + &#x27;!&#x27;): Muestra un mensaje en pantalla 
+combinando texto fijo y el operador + para concatenar la variable nombre con 
+signos de exclamación. 
+• print(&#x27;Tu salario bruto es:&#x27;, salario_bruto): Imprime el resultado 
+numérico del cálculo del salario. 
+• print(&#x27;¿El número de horas trabajadas es par?&#x27;, horas_pares): 
+Muestra el valor booleano resultante de la operación con el operador módulo. 
+ 
+</pre>
+    </section>
+    
+  </div>
+</main>
+<footer>Apuntes de Tecnología · HTML adaptable a móvil y ordenador</footer>
+<script>
+const search = document.getElementById('search');
+const pages = [...document.querySelectorAll('.page')];
+search.addEventListener('input', () => {
+  const term = search.value.trim().toLocaleLowerCase('es');
+  pages.forEach(page => {
+    page.classList.toggle('hidden', term && !page.innerText.toLocaleLowerCase('es').includes(term));
+  });
+});
+</script>
+</body>
+</html>
